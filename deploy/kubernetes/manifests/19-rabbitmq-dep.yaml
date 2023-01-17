@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.6.8-management
+        image: rabbitmq:3.9.27-management
         ports:
         - containerPort: 15672
           name: management
@@ -36,6 +36,9 @@ spec:
               - SETUID
               - DAC_OVERRIDE
           readOnlyRootFilesystem: true
+        volumeMounts:
+          - mountPath: /var/log/rabbitmq
+            name: log
       - name: rabbitmq-exporter
         image: kbudde/rabbitmq-exporter
         ports:
@@ -43,3 +46,6 @@ spec:
           name: exporter
       nodeSelector:
         beta.kubernetes.io/os: linux
+      volumes:
+        - emptyDir: {}
+          name: log

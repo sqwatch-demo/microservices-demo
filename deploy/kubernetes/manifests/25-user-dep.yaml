@@ -18,7 +18,12 @@ spec:
     spec:
       containers:
       - name: user
-        image: weaveworksdemos/user:0.4.7
+        image: user:latest
+        imagePullPolicy: IfNotPresent
+        command:
+          - /user
+        args:
+          - -port=80
         resources:
           limits:
             cpu: 300m
@@ -29,8 +34,14 @@ spec:
         ports:
         - containerPort: 80
         env:
-        - name: mongo
-          value: user-db:27017
+#        - name: MONGO_HOST
+#          value: user-db:27017
+#        - name: MONGO_USER
+#          value: sqwatch
+#        - name: MONGO_PASS
+#          value: BigFoot1
+        - name: MONGODB_URI
+          value: mongodb://user-db:27017/socksdb
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001

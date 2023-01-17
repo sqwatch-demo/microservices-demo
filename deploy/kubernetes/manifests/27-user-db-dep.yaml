@@ -18,8 +18,13 @@ spec:
     spec:
       containers:
       - name: user-db
-        image: weaveworksdemos/user-db:0.3.0
-
+        image: user-db:latest
+        imagePullPolicy: IfNotPresent
+#        env:
+#        - name: MONGO_INITDB_ROOT_USERNAME
+#          value: sqwatch
+#        - name: MONGO_INITDB_ROOT_PASSWORD
+#          value: BigFoot1
         ports:
         - name: mongo
           containerPort: 27017
@@ -31,6 +36,7 @@ spec:
               - CHOWN
               - SETGID
               - SETUID
+              - NET_BIND_SERVICE
           readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /tmp

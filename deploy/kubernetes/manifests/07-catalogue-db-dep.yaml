@@ -18,7 +18,9 @@ spec:
     spec:
       containers:
       - name: catalogue-db
-        image: weaveworksdemos/catalogue-db:0.3.0
+        image: catalogue-db:latest
+        imagePullPolicy: IfNotPresent
+        args: ["--default-authentication-plugin=mysql_native_password"]
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: fake_password

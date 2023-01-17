@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: weaveworksdemos/front-end:0.3.12
+        image: front-end:latest
+        imagePullPolicy: IfNotPresent
         resources:
           limits:
             cpu: 300m
@@ -29,6 +30,8 @@ spec:
         env:
         - name: SESSION_REDIS
           value: "true"
+        - name: npm_config_cache
+          value: /tmp/npm/
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
@@ -36,6 +39,9 @@ spec:
             drop:
               - all
           readOnlyRootFilesystem: true
+        volumeMounts:
+          - mountPath: /tmp
+            name: tmp
         livenessProbe:
           httpGet:
             path: /
@@ -50,3 +56,6 @@ spec:
           periodSeconds: 3
       nodeSelector:
         beta.kubernetes.io/os: linux
+      volumes:
+        - emptyDir: { }
+          name: tmp

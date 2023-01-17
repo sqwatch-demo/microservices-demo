@@ -18,8 +18,9 @@ spec:
     spec:
       containers:
       - name: catalogue
-        image: weaveworksdemos/catalogue:0.3.5
-        command: ["/app"]
+        image: catalogue:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/catalogue"]
         args:
         - -port=80
         resources:
