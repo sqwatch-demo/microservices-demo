@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: sqwatch-demo/front-end:latest
+        image: sqwatchio/front-end:latest
         imagePullPolicy: IfNotPresent
         resources:
           limits:

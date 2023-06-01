@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: user-db
-        image: sqwatch-demo/user-db:latest
+        image: sqwatchio/user-db:latest
         imagePullPolicy: IfNotPresent
 #        env:
 #        - name: MONGO_INITDB_ROOT_USERNAME

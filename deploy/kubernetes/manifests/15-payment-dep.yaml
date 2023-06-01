@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: payment
-        image: sqwatch-demo/payment:latest
+        image: sqwatchio/payment:latest
         imagePullPolicy: IfNotPresent
         command: ["/payment"]
         args:

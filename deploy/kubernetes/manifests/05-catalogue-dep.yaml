@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: catalogue
-        image: sqwatch-demo/catalogue:latest
+        image: sqwatchio/catalogue:latest
         imagePullPolicy: IfNotPresent
         command: ["/catalogue"]
         args:

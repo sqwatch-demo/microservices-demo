@@ -148,8 +148,9 @@ spec:
     spec:
       containers:
       - name: catalogue
-        image: weaveworksdemos/catalogue:0.3.5
-        command: ["/app"]
+        image: sqwatchio/catalogue:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/catalogue"]
         args:
         - -port=80
         resources:
@@ -221,7 +222,9 @@ spec:
     spec:
       containers:
       - name: catalogue-db
-        image: weaveworksdemos/catalogue-db:0.3.0
+        image: sqwatchio/catalogue-db:latest
+        imagePullPolicy: IfNotPresent
+        args: ["--default-authentication-plugin=mysql_native_password"]
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: fake_password
@@ -265,7 +268,8 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: weaveworksdemos/front-end:0.3.12
+        image: sqwatchio/front-end:latest
+        imagePullPolicy: IfNotPresent
         resources:
           limits:
             cpu: 300m
@@ -278,6 +282,8 @@ spec:
         env:
         - name: SESSION_REDIS
           value: "true"
+        - name: npm_config_cache
+          value: /tmp/npm/
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
@@ -285,6 +291,9 @@ spec:
             drop:
               - all
           readOnlyRootFilesystem: true
+        volumeMounts:
+          - mountPath: /tmp
+            name: tmp
         livenessProbe:
           httpGet:
             path: /
@@ -299,6 +308,9 @@ spec:
           periodSeconds: 3
       nodeSelector:
         beta.kubernetes.io/os: linux
+      volumes:
+        - emptyDir: { }
+          name: tmp
 ---
 apiVersion: v1
 kind: Service
@@ -310,11 +322,10 @@ metadata:
     name: front-end
   namespace: sock-shop
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
   - port: 80
     targetPort: 8079
-    nodePort: 30001
   selector:
     name: front-end
 ---
@@ -462,7 +473,11 @@ spec:
     spec:
       containers:
       - name: payment
-        image: weaveworksdemos/payment:0.4.3
+        image: sqwatchio/payment:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/payment"]
+        args:
+          - -port=80
         resources:
           limits:
             cpu: 200m
@@ -586,7 +601,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.6.8-management
+        image: rabbitmq:3.9.27-management
         ports:
         - containerPort: 15672
           name: management
@@ -602,6 +617,9 @@ spec:
               - SETUID
               - DAC_OVERRIDE
           readOnlyRootFilesystem: true
+        volumeMounts:
+          - mountPath: /var/log/rabbitmq
+            name: log
       - name: rabbitmq-exporter
         image: kbudde/rabbitmq-exporter
         ports:
@@ -609,6 +627,9 @@ spec:
           name: exporter
       nodeSelector:
         beta.kubernetes.io/os: linux
+      volumes:
+        - emptyDir: {}
+          name: log
 ---
 apiVersion: v1
 kind: Service
@@ -775,7 +796,12 @@ spec:
     spec:
       containers:
       - name: user
-        image: weaveworksdemos/user:0.4.7
+        image: sqwatchio/user:latest
+        imagePullPolicy: IfNotPresent
+        command:
+          - /user
+        args:
+          - -port=80
         resources:
           limits:
             cpu: 300m
@@ -786,8 +812,14 @@ spec:
         ports:
         - containerPort: 80
         env:
-        - name: mongo
-          value: user-db:27017
+#        - name: MONGO_HOST
+#          value: user-db:27017
+#        - name: MONGO_USER
+#          value: sqwatch
+#        - name: MONGO_PASS
+#          value: BigFoot1
+        - name: MONGODB_URI
+          value: mongodb://user-db:27017/socksdb
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
@@ -849,8 +881,13 @@ spec:
     spec:
       containers:
       - name: user-db
-        image: weaveworksdemos/user-db:0.3.0
-
+        image: sqwatchio/user-db:latest
+        imagePullPolicy: IfNotPresent
+#        env:
+#        - name: MONGO_INITDB_ROOT_USERNAME
+#          value: sqwatch
+#        - name: MONGO_INITDB_ROOT_PASSWORD
+#          value: BigFoot1
         ports:
         - name: mongo
           containerPort: 27017
@@ -862,6 +899,7 @@ spec:
               - CHOWN
               - SETGID
               - SETUID
+              - NET_BIND_SERVICE
           readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /tmp
