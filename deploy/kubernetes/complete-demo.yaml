@@ -148,7 +148,7 @@ spec:
     spec:
       containers:
       - name: catalogue
-        image: sqwatchio/catalogue:latest
+        image: sqwatch-demo/catalogue:latest
         imagePullPolicy: IfNotPresent
         command: ["/catalogue"]
         args:
@@ -222,7 +222,7 @@ spec:
     spec:
       containers:
       - name: catalogue-db
-        image: sqwatchio/catalogue-db:latest
+        image: sqwatch-demo/catalogue-db:latest
         imagePullPolicy: IfNotPresent
         args: ["--default-authentication-plugin=mysql_native_password"]
         env:
@@ -268,7 +268,7 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: sqwatchio/front-end:latest
+        image: sqwatch-demo/front-end:latest
         imagePullPolicy: IfNotPresent
         resources:
           limits:
@@ -473,7 +473,7 @@ spec:
     spec:
       containers:
       - name: payment
-        image: sqwatchio/payment:latest
+        image: sqwatch-demo/payment:latest
         imagePullPolicy: IfNotPresent
         command: ["/payment"]
         args:
@@ -796,7 +796,7 @@ spec:
     spec:
       containers:
       - name: user
-        image: sqwatchio/user:latest
+        image: sqwatch-demo/user:latest
         imagePullPolicy: IfNotPresent
         command:
           - /user
@@ -881,7 +881,7 @@ spec:
     spec:
       containers:
       - name: user-db
-        image: sqwatchio/user-db:latest
+        image: sqwatch-demo/user-db:latest
         imagePullPolicy: IfNotPresent
 #        env:
 #        - name: MONGO_INITDB_ROOT_USERNAME

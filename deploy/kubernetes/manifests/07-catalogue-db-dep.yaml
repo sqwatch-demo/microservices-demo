@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: catalogue-db
-        image: sqwatchio/catalogue-db:latest
+        image: sqwatch-demo/catalogue-db:latest
         imagePullPolicy: IfNotPresent
         args: ["--default-authentication-plugin=mysql_native_password"]
         env:

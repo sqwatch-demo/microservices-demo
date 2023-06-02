@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: user
-        image: sqwatchio/user:latest
+        image: sqwatch-demo/user:latest
         imagePullPolicy: IfNotPresent
         command:
           - /user
